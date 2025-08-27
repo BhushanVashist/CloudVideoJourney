@@ -1,0 +1,73 @@
+Docker Notes – 27 Aug
+1. Dockerfile improvements
+    FROM alpine
+    RUN apk update
+    RUN apk add --no-cache curl
+    CMD ["echo", "Docker Layers Test"]
+
+
+    RUN is used during build (creates layers in image).
+
+    CMD is executed when the container runs.
+
+    --no-cache prevents saving the apk cache, making the image smaller.
+
+2. Building a Docker image   // this will build a specific docker file from multiple files in the particular folder
+    docker build -t hellodoc -f Dockerfile .
+
+
+    -t hellodoc → names the image hellodoc.
+
+    -f Dockerfile → specifies the Dockerfile to use.
+
+    . → build context (current folder).
+
+3. Running a container
+    docker run hellodoc
+
+
+    Runs the container with the default CMD (echo Docker Layers Test).
+
+4. Running commands inside container
+    docker run -it hellodoc sh
+
+
+    -i keeps STDIN open (interactive mode).
+
+    -t allocates a terminal.
+
+    sh opens a shell inside the container (you can run commands manually).
+
+5. Running a single command and auto-remove
+    docker run --rm hellodoc curl --version
+
+
+    Runs curl --version inside the container.
+
+    Automatically deletes the container after execution (--rm).
+
+6. Installing and using curl inside the container
+    FROM alpine
+    RUN apk update
+    RUN apk add --no-cache curl
+    CMD ["curl", "--version"]
+
+
+    Build and run:
+
+    docker build -t curltest .
+    docker run curltest
+
+7. Remove all Docker images
+    docker rmi -f $(docker images -q)
+
+
+    (On Windows PowerShell use:)
+
+    docker rmi -f (docker images -q)
+
+8. Other ways to run curl 
+    a. docker run --rm hellodoc curl --version   // --rm will clears up after the container closes
+    b. docker run hellodoc curl --version
+    c. docker run -it hellodoc sh curl --version
+    d. docker run hellodoc sh -c "curl --version"  // run hellodoc -> open sh -> -c means run command on sh -> "curl --version" is the command
