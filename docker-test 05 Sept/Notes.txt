@@ -1,0 +1,65 @@
+## 📘 Docker Day 5 – Networks (2 Sept)
+
+### 🔹 Why Docker Networks?
+- Containers are isolated, so Docker networks connect them for communication.
+- Default network driver = **bridge**.
+
+---
+
+### 🔹 Common Network Drivers
+1. **bridge (default)**
+   - Each container gets its own IP inside the Docker network.
+   - Containers can talk to each other by **name** if on the same network.
+
+2. **host**
+   - Shares host machine’s network stack.
+   - No isolation (container uses host’s IP).
+
+3. **none**
+   - Completely isolated, no networking.
+
+---
+
+### 🔹 Create a Custom Network
+```bash
+docker network create myNet
+```
+
+---
+
+### 🔹 Run Containers in Same Network
+```bash
+docker run -dit --name contA --network myNet alpine sh
+docker run -it --name contB --network myNet alpine sh
+```
+
+---
+
+### 🔹 Test Communication
+Inside `contB` shell:
+```bash
+ping contA
+```
+✅ If both are in the same network → `contB` can ping `contA`.
+
+---
+
+### 🔹 Flags Recap
+- `-it` → interactive terminal (keeps shell open).
+- `-d` → detached (runs in background).
+- `--name` → set container name.
+- `--network` → attach container to a custom network.
+- `--rm` → auto remove container after it exits.
+
+---
+
+### 🔹 Port Mapping Example
+```bash
+docker run -d -p 8080:80 nginx
+```
+- `8080:80` → hostPort:containerPort
+- Image name (nginx) always comes **last**.
+
+---
+
+✅ **Key Point**: Image name always comes last in `docker run`.

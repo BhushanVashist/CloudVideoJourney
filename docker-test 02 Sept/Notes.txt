@@ -1,0 +1,23 @@
+1. Docker network ls  --> Lists all the network
+2. Docker network --create myNet   --> Creates a network named myNet (of bridge type) (Containers within the same network can communicate)
+
+3. Docker run -it --name contA --network myNet alpine sh
+	here,
+	    contA is the name of the container
+	    myNet is the network
+            alpine is the docker image (begin pulled from docker, if not exist)
+            sh is the shell of alpine
+	    -it is necessary for keeping the sh open, if -it not used then the shell will open and exit immediately
+
+4. Docker run -it --name contB --network myNet alpine sh 
+	here,
+   	   contB is another container within the same network
+
+5. Now, use ping contA from the sh of the contB, and they ping each other as they are in same network.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+6. docker run -dit --name contWeb --network myNet -p 8080:80 nginx
+	-dit → run in background with terminal.
+	--network myNet → put it on the same custom network.
+	-p 8080:80 → maps your local machine’s port 8080 to container’s port 80.
